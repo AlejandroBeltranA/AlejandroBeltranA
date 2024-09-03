@@ -1,0 +1,91 @@
+baseURL = "https://www.beltranalejandro.com"
+languageCode = "en-us"
+theme = "adritian-free-hugo-theme"
+
+# Plugins
+[params.plugins]
+
+  # CSS Plugins
+  [[params.plugins.css]]
+  URL = "css/main.css"
+  [[params.plugins.css]]
+  URL = "css/rad-icons.css"
+  [[params.plugins.css]]
+  URL = "css/custom.css"
+
+  # JS Plugins
+  [[params.plugins.js]]
+  URL = "js/rad-animations.js"
+  [[params.plugins.js]]
+  URL = "js/sticky-header.js"
+  [[params.plugins.js]]
+  URL = "js/library/fontfaceobserver.js"
+
+
+# navigation
+[menu]
+
+  [[menu.header]]
+  name = "About"
+  URL = "#about"
+  weight = 2
+
+  [[menu.header]]
+  name = "Publications"
+  URL = "#publication"
+  weight = 3
+
+#  [[menu.header]]
+#  name = "Experience"
+#  URL = "#experience"
+#  weight = 4
+
+ # [[menu.header]]
+ # name = "Blog"
+ # URL = "/blog"
+ # weight = 5
+
+  [[menu.header]]
+  name = "CV"
+  URL = "https://drive.google.com/file/d/1drRIX32MaPWlXWZQqj0oSQnuQ7Sn53lx/view"
+  weight = 6
+
+  [[menu.footer]]
+  name = "About"
+  URL = "#about"
+  weight = 2
+
+ # [[menu.footer]]
+ # name = "Portfolio"
+ # URL = "#portfolio"
+ # weight = 3
+
+  [[menu.footer]]
+  name = "Contact"
+  URL = "#contact"
+  weight = 4
+
+
+[params]
+
+  sections = ["showcase", "about", "education", "experience", "client-and-work", "testimonial", "contact", "newsletter"]
+
+  homepageExperienceCount = 6
+
+  [params.google_analytics]
+      code = "UA-XXXXX-Y"
+      enabled = false
+  [params.google_tag_manager]
+      code = "GTM-XXXXX"
+      enabled = false
+  
+  [params.logo]
+    text1 = "Alejandro"
+    text2 = "Beltran"
+
+  [params.footer]
+      copyright = ""
+      [params.footer.radity_logo]
+        x = ""
+        _2x = ""
+        alt = ""
