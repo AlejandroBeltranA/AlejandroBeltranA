@@ -63,7 +63,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./beltran/public
+          path: ./public
 
   # Deployment job
   deploy:
@@ -75,8 +75,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4v
-
-
-
-
+        uses: actions/deploy-pages@v4
