@@ -63,7 +63,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ./beltran/public
 
   # Deployment job
   deploy:
@@ -80,4 +80,3 @@ jobs:
 
 
 
-        
