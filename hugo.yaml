@@ -1,7 +1,7 @@
 baseURL: "https://beltranalejandro.com/"
 title: AlejandroBeltran
 paginate: 5
-theme: github.com/adityatelange/hugo-PaperMod
+theme: themes/PaperMod
 
 enableRobotsTXT: true
 buildDrafts: false
