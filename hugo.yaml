@@ -114,14 +114,14 @@ params:
     keys: ["title", "permalink", "summary", "content"]
 menu:
   main:
-    - identifier: publications
-      name: publications
-      url: /categories/
-      weight: 10
-    - identifier: projects
-      name: projects
-      url: /tags/
-      weight: 20
+    #- identifier: publications
+    #  name: publications
+    #  url: /categories/
+    #  weight: 10
+    #- identifier: projects
+    #  name: projects
+    #  url: /tags/
+    #  weight: 20
     #- identifier: example
     #  name: example.org
     #  url: https://example.org
