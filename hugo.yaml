@@ -1,5 +1,5 @@
 baseURL: "https://alejandrobeltran.github.io/"
-title: AlejandroBeltran
+title: Alejandro Beltran
 paginate: 5
 theme: PaperMod/
 
@@ -14,7 +14,7 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: AlejandroBeltran
+  title: Alejandro Beltran
   description: "Welcome to my personal webpage. "
   keywords: [Blog, Portfolio, PaperMod]
   author: Me
@@ -58,7 +58,7 @@ params:
   profileMode:
     enabled: true # needs to be explicitly set
     title: "Welcome, Bienvenido!"
-    subtitle: "Hello, I am a researcher interested in using machine learning to study various interrelated topics such as: public finance, corruption, money laundering, bureaucratic performance, and regulatory compliance to name a few. My current role is as a Research Associate at The Alan Turing Institute, within the Public Policy Programme. Prior to moving to London, I was based at the University of Arizona where I obtained my PhD, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México. Please reach out if you have similar interests or if you would like to connect!"
+    subtitle: "Hello, I am a researcher interested in using machine learning to study various interrelated topics such as: public finance, corruption, money laundering, bureaucratic performance, and regulatory compliance to name a few. I am currently a Research Associate at The Alan Turing Institute, within the Public Policy Programme. Prior to moving to London, I was based at the University of Arizona where I obtained my PhD, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México. Please reach out if you have similar interests or if you would like to connect!"
     imageUrl: "/ab3.png"
     imageWidth: 300
     imageHeight: 300
@@ -116,11 +116,11 @@ menu:
   main:
     - identifier: publications
       name: publications
-      url: /categories/
+      url: /publications/
       weight: 10
     - identifier: projects
       name: projects
-      url: /tags/
+      url: /projects/
       weight: 20
     #- identifier: example
     #  name: example.org

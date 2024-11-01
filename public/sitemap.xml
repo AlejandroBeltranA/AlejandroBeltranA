@@ -2,10 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beltranalejandro.com/</loc>
+    <loc>https://alejandrobeltran.github.io/</loc>
+    <lastmod>2024-10-31T10:56:53+00:00</lastmod>
   </url><url>
-    <loc>https://beltranalejandro.com/categories/</loc>
+    <loc>https://alejandrobeltran.github.io/projects/list_of_projects/</loc>
+    <lastmod>2024-10-31T10:56:53+00:00</lastmod>
   </url><url>
-    <loc>https://beltranalejandro.com/tags/</loc>
+    <loc>https://alejandrobeltran.github.io/projects/</loc>
+    <lastmod>2024-10-31T10:56:53+00:00</lastmod>
+  </url><url>
+    <loc>https://alejandrobeltran.github.io/publications/</loc>
+    <lastmod>2024-10-31T10:56:53+00:00</lastmod>
+  </url><url>
+    <loc>https://alejandrobeltran.github.io/categories/</loc>
+  </url><url>
+    <loc>https://alejandrobeltran.github.io/projects/local_authorities/</loc>
+  </url><url>
+    <loc>https://alejandrobeltran.github.io/tags/</loc>
   </url>
 </urlset>

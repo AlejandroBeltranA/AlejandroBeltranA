@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Alejandro Beltran</title>
-    <link>https://alejandrobeltran.github.io/</link>
-    <description>Recent content on Alejandro Beltran</description>
+    <title>Projects on Alejandro Beltran</title>
+    <link>https://alejandrobeltran.github.io/projects/</link>
+    <description>Recent content in Projects on Alejandro Beltran</description>
     <image>
       <title>Alejandro Beltran</title>
       <url>https://alejandrobeltran.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
@@ -12,7 +12,7 @@
     <generator>Hugo -- 0.133.1</generator>
     <language>en</language>
     <lastBuildDate>Thu, 31 Oct 2024 10:56:53 +0000</lastBuildDate>
-    <atom:link href="https://alejandrobeltran.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://alejandrobeltran.github.io/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Detecting Suspicious Companies</title>
       <link>https://alejandrobeltran.github.io/projects/list_of_projects/</link>
@@ -20,15 +20,6 @@
       <guid>https://alejandrobeltran.github.io/projects/list_of_projects/</guid>
       <description>By Alejandro Beltran
 Project description Complicated company ownership structures are often set up to obfuscate the identification of beneficial owners. These strategies are considered to be on the fringe of legitimacy and legality, so detecting them is important to regulators and society in general. We combine economic theory, network analysis, and machine learning to unearth the patterns that such behaviours leave behind in large-scale administrative datasets. This allows us to identify clusters of companies that specialise in such strategies, and to formulate models about their potential adaptation to future legal reforms.</description>
-    </item>
-    <item>
-      <title>Publications</title>
-      <link>https://alejandrobeltran.github.io/publications/</link>
-      <pubDate>Thu, 31 Oct 2024 10:56:53 +0000</pubDate>
-      <guid>https://alejandrobeltran.github.io/publications/</guid>
-      <description>Peer Reviewed Beltran, A. (2023). Fiscal data in text: Information extraction from audit reports using Natural Language Processing. Data &amp;amp; Policy, 5, E7. Paper Code
-Osorio, J., &amp;amp; Beltran, A. (2020). Enhancing the Detection of Criminal Organizations in Mexico using ML and NLP. In 2020 International Joint Conference on Neural Networks (IJCNN) (pp. 1-7). IEEE. Paper
-Osorio, J., Reyes, A., Beltrán, A., &amp;amp; Ahmadzai, A. (2020). Supervised event coding from text written in Arabic: Introducing hadath.</description>
     </item>
     <item>
       <title>Local Authorities UK</title>
