@@ -87,3 +87,6 @@ This project provides policymakers with guidance on how company ownership evolve
 * [Kat Fair](https://turingcss.org/people/krf/)
 
 * [Omar A. Guerrero](https://turingcss.org/people/oag/)
+
+## Presentation
+* [Birds of Feather](https://docs.google.com/presentation/d/1Q9Ezk3NLTgINi2EeLiFet7c5zO7RjAQh/edit?usp=drive_link&ouid=106864453263461266188&rtpof=true&sd=true)
