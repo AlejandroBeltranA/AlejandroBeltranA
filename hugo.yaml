@@ -58,14 +58,14 @@ params:
   profileMode:
     enabled: true # needs to be explicitly set
     title: "Welcome, Bienvenido!"
-    subtitle: "Hello, I am a researcher interested in using machine learning to study various interrelated topics such as: public finance, corruption, money laundering, bureaucratic performance, and regulatory compliance to name a few. I am currently a Research Associate at The Alan Turing Institute, within the Public Policy Programme. Prior to moving to London, I was based at the University of Arizona where I obtained my PhD, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México. Please reach out if you have similar interests or if you would like to connect!"
+    subtitle: "Hello, I am a researcher specialising in how AI systems behave inside real institutions and what happens to the people who rely on them. My work combines machine learning, NLP, and econometrics with direct embedded experience in live government deployments. I am currently a Postdoctoral Research Associate at The Alan Turing Institute. Prior to moving to London, I was based at the University of Arizona where I obtained my PhD, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México. Please reach out if you have similar interests or if you would like to connect!"
     imageUrl: "/ab3.png"
     imageWidth: 300
     imageHeight: 300
     imageTitle: my image
     buttons:
       - name: CV
-        url: https://drive.google.com/file/d/1drRIX32MaPWlXWZQqj0oSQnuQ7Sn53lx/view
+        url: https://drive.google.com/file/d/1-h1dLKXxjEtdbhhRewUF8GCCqO7yZyu_/view
      
 
   # home-info mode
