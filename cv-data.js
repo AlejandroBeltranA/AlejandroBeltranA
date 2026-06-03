@@ -26,8 +26,6 @@ window.CV = {
   name: 'Alejandro Beltran',
   role: 'Applied AI Researcher',
   org: 'The Alan Turing Institute',
-  // centerpiece
-  pitch: 'I tell stories with data that people actually care about.',
   bio: "I'm a researcher who builds AI tools that help governments, currently a Postdoctoral Research Associate at the Alan Turing Institute. I've worked with the Inter-American Development Bank on research across Latin America, and with the UK Ministry of Justice on improving their modelling infrastructure. Before London I did my PhD at the University of Arizona, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México.",
   bioLong: 'Researcher working at the seam of machine learning and public institutions. PhD, University of Arizona. Previously Universidad Autónoma de Sinaloa, Culiacán, México.',
   social: {
