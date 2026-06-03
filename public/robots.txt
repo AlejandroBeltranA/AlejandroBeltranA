@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://alejandrobeltran.github.io/sitemap.xml

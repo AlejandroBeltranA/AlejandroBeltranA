@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>When to Stop — Local Threshold Evaluation</title>
+<meta name="description" content="Local Threshold Evaluation (LTE): a pre-deployment harness that catches when an agentic AI system becomes operationally unreliable — before it produces a visible hallucination." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0c0d10; --panel:#14161c; --panel2:#1a1d24;
+    --ink:#ecebe6; --muted:#9a9aa2; --faint:#62636b;
+    --line:rgba(255,255,255,0.10); --line2:rgba(255,255,255,0.06);
+    --accent:#5aa2e0;
+    --s-continue:#3fb27f; --s-retry:#d8b34a; --s-repair:#d89a4a; --s-escalate:#d8752f; --s-abort:#d2452f;
+    --disp:"Space Grotesk",system-ui,sans-serif; --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --maxw:880px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .mono{font-family:var(--mono);}
+  .disp{font-family:var(--disp);font-weight:600;letter-spacing:-0.02em;}
+  .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.13em;text-transform:uppercase;}
+
+  /* top bar */
+  header.bar{border-bottom:1px solid var(--line);background:rgba(12,13,16,0.7);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20;}
+  .bar-in{max-width:var(--maxw);margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .backlink{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s;}
+  .backlink:hover{color:var(--accent);}
+  .bar-links{display:flex;gap:8px;}
+  .bar-links a{font-family:var(--mono);font-size:12px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:7px 13px;transition:border-color .15s,color .15s;}
+  .bar-links a:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* hero */
+  .hero{padding:64px 0 30px;}
+  .eyebrow{color:var(--accent);margin-bottom:20px;}
+  h1.title{font-family:var(--disp);font-weight:600;font-size:clamp(40px,7vw,76px);line-height:0.98;letter-spacing:-0.03em;margin:0 0 18px;}
+  .sub{font-size:20px;line-height:1.4;color:var(--ink);margin:0 0 22px;max-width:640px;font-weight:500;}
+  .byline{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:0.02em;}
+  .byline b{color:var(--ink);font-weight:500;}
+  .lede{font-size:18px;line-height:1.6;color:var(--muted);max-width:660px;margin:26px 0 0;}
+  .lede b{color:var(--ink);font-weight:500;}
+
+  /* race console */
+  .console-wrap{position:relative;left:50%;transform:translateX(-50%);width:min(1140px,calc(100vw - 36px));padding:38px 0 12px;}
+  .console{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+  .console-head{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:wrap;}
+  .chead-title{font-size:13px;display:flex;align-items:center;gap:9px;color:var(--ink);}
+  .pulse{width:8px;height:8px;border-radius:5px;background:var(--s-continue);animation:pulse 1.6s infinite;color:var(--s-continue);transition:background .3s,color .3s;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,178,127,.45)}70%{box-shadow:0 0 0 7px rgba(63,178,127,0)}100%{box-shadow:0 0 0 0 rgba(63,178,127,0)}}
+  .chead-sub{font-size:11.5px;color:var(--faint);}
+  .chead-btn{font-family:var(--mono);font-size:12px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+  .chead-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  .task-strip{padding:11px 18px;border-bottom:1px solid var(--line2);background:rgba(255,255,255,0.014);font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.55;}
+  .task-strip b{color:var(--ink);font-weight:500;}
+
+  /* single-shot probe baseline */
+  .probe-strip{padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(90,162,224,0.045);}
+  .probe-cap{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:9px;letter-spacing:0.02em;}
+  .probe-cap b{color:var(--ink);font-weight:500;}
+  .probe-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:9px;}
+  .probe-item{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:7px;padding:7px 11px;background:var(--panel);}
+  .probe-model{font-family:var(--mono);font-size:11.5px;color:var(--ink);}
+  .probe-verdict{font-family:var(--mono);font-size:11px;letter-spacing:0.04em;white-space:nowrap;}
+  .probe-verdict.ok{color:var(--s-continue);}
+  .probe-verdict.bad{color:var(--s-abort);}
+  .probe-note{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:0.02em;line-height:1.5;}
+  .probe-note b{color:var(--muted);font-weight:500;}
+
+  .lane-tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:0.07em;text-transform:uppercase;margin-top:7px;padding:2px 6px;border-radius:4px;border:1px solid var(--line);color:var(--faint);}
+  .lane-tag.t-collapse{color:#cf6f5e;border-color:rgba(210,69,47,0.35);}
+  .lane-tag.t-drift{color:var(--s-escalate);border-color:rgba(216,117,47,0.42);}
+  .lane-tag.t-control{color:var(--s-continue);border-color:rgba(63,178,127,0.35);}
+
+  .lane-read{min-height:15px;margin:0 0 12px;font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--s-escalate);letter-spacing:0.01em;opacity:0;transition:opacity .3s;}
+  .lane-read.show{opacity:1;}
+
+  .lanes{display:grid;grid-template-columns:repeat(3,1fr);}
+  .lane{padding:18px 16px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;transition:background .35s;}
+  .lane:last-child{border-right:none;}
+  .lane.is-abort{background:rgba(210,69,47,0.05);}
+  .lane.is-control.is-done{background:rgba(63,178,127,0.045);}
+
+  .lane-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:15px;}
+  .lane-model{font-family:var(--mono);font-size:13px;color:var(--ink);font-weight:500;line-height:1.25;}
+  .lane-backend{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-top:4px;}
+  .lane-statebox{text-align:right;flex:0 0 auto;}
+  .lane-state{font-family:var(--disp);font-weight:600;font-size:21px;letter-spacing:-0.01em;color:var(--s-continue);line-height:1;text-transform:lowercase;transition:color .3s;}
+  .lane-turn{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:5px;font-variant-numeric:tabular-nums;}
+
+  .gauge{margin-bottom:11px;}
+  .gauge-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+  .gauge-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.02em;}
+  .gauge-val{font-family:var(--mono);font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .gauge-bar{position:relative;height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;}
+  .gauge-fill{height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .45s ease,background .3s;}
+  .gauge-fill.lat{background:var(--s-continue);}
+  .gauge-fill.lat.hot{background:var(--s-abort);}
+  .gauge-thresh{position:absolute;top:-2px;bottom:-2px;left:80%;width:1px;background:rgba(255,255,255,0.3);z-index:2;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:5px 0 9px;}
+  .chip{font-family:var(--mono);font-size:10px;letter-spacing:0.03em;border-radius:5px;padding:3px 7px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;}
+  .chip.ok{color:var(--s-continue);border-color:rgba(63,178,127,0.4);}
+  .chip.bad{color:var(--s-abort);border-color:rgba(210,69,47,0.45);}
+  .chip.warn{color:var(--s-escalate);border-color:rgba(216,117,47,0.5);}
+
+  .bubble-label{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;transition:color .3s;}
+  .bubble-label.same{color:var(--muted);letter-spacing:0.05em;}
+  .bubble{position:relative;background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--muted);white-space:pre-wrap;word-break:break-word;height:128px;overflow:hidden;}
+  .bubble::after{content:"";position:absolute;left:0;right:0;bottom:0;height:32px;background:linear-gradient(transparent,var(--panel2));pointer-events:none;}
+  .bubble.changed{animation:bubbleIn .4s ease;}
+  @keyframes bubbleIn{from{opacity:0.35;transform:translateY(3px);}to{opacity:1;transform:none;}}
+
+  .cap{margin-top:14px;border-radius:8px;padding:0 12px;font-family:var(--mono);font-size:11px;line-height:1.55;opacity:0;max-height:0;overflow:hidden;transition:opacity .4s,max-height .4s,padding .4s;}
+  .cap.show{opacity:1;max-height:260px;padding:11px 12px;}
+  .cap.abort{border:1px solid var(--s-abort);background:rgba(210,69,47,0.07);color:var(--muted);}
+  .cap.control{border:1px solid rgba(63,178,127,0.5);background:rgba(63,178,127,0.06);color:var(--muted);}
+  .cap-head{font-weight:500;letter-spacing:0.04em;margin-bottom:7px;}
+  .cap.abort .cap-head{color:var(--s-abort);}
+  .cap.control .cap-head{color:var(--s-continue);}
+  .cap b{color:var(--ink);font-weight:500;}
+  .cap-triggers{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+
+  .console-foot{display:flex;align-items:center;gap:14px;padding:13px 18px;border-top:1px solid var(--line);background:var(--panel2);}
+  .scrub{flex:1;appearance:none;-webkit-appearance:none;height:4px;border-radius:3px;background:var(--panel);outline:none;cursor:pointer;}
+  .scrub::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--panel2);}
+  .scrub::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--panel2);}
+  .foot-step{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:90px;text-align:right;}
+  .foot-step b{color:var(--ink);font-weight:500;}
+  .console-cap{font-size:13.5px;line-height:1.55;color:var(--muted);margin:16px 4px 0;max-width:780px;}
+
+  /* sections */
+  section{padding:42px 0;}
+  h2.sec{font-family:var(--mono);font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin:0 0 18px;}
+  .body-p{font-size:17.5px;line-height:1.6;margin:0 0 16px;max-width:660px;color:var(--ink);}
+  .body-p.muted{color:var(--muted);}
+  .body-p b{font-weight:600;}
+
+  .precursors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+  .pc{border:1px solid var(--line);border-radius:10px;padding:18px;background:var(--panel);}
+  .pc-name{font-family:var(--disp);font-weight:600;font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:9px;}
+  .pc-dot{width:8px;height:8px;border-radius:5px;flex:0 0 auto;}
+  .pc-desc{font-size:14px;line-height:1.5;color:var(--muted);}
+
+  .ladder-big{display:flex;align-items:stretch;gap:0;margin-top:8px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .lr{flex:1;padding:16px 12px;text-align:center;border-right:1px solid var(--line);}
+  .lr:last-child{border-right:none;}
+  .lr-name{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500;}
+  .lr-arrow{color:var(--faint);font-size:12px;margin-top:4px;}
+
+  .finding{border-left:3px solid var(--accent);padding-left:20px;margin:2px 0;}
+  .stat-row{display:flex;gap:32px;flex-wrap:wrap;margin:22px 0 4px;}
+  .stat .n{font-family:var(--disp);font-weight:600;font-size:30px;color:var(--ink);letter-spacing:-0.02em;}
+  .stat .l{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
+
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 8px;}
+  .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:15px;font-weight:500;padding:13px 22px;border-radius:8px;transition:background .15s,border-color .15s;}
+  .btn-primary{background:var(--accent);color:#08121c;}
+  .btn-primary:hover{background:#7bb8ec;}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0 64px;}
+  .foot-cite{font-family:var(--mono);font-size:12px;color:var(--faint);line-height:1.6;}
+  .foot-cite a{color:var(--accent);text-decoration:none;}
+
+  @media(max-width:760px){
+    .lanes{grid-template-columns:1fr;}
+    .probe-row{grid-template-columns:1fr;}
+    .lane{border-right:none;border-bottom:1px solid var(--line);}
+    .lane:last-child{border-bottom:none;}
+    .precursors{grid-template-columns:1fr;}
+    .ladder-big{flex-direction:column;}
+    .lr{border-right:none;border-bottom:1px solid var(--line);}
+    .lr:last-child{border-bottom:none;}
+    h1.title{font-size:44px;}
+  }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="backlink" href="../index.html">← Alejandro Beltran</a>
+    <div class="bar-links">
+      <a href="when-to-stop.pdf" target="_blank" rel="noopener">Paper ↓</a>
+      <a href="https://github.com/AlejandroBeltranA/local_threshold_evaluation" target="_blank" rel="noopener">Code ↗</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="tag eyebrow">Working paper · 2026 · Agentic AI</div>
+    <h1 class="title">When to Stop</h1>
+    <p class="sub">Operational reliability and enforceable accountability for agentic AI in government deployment.</p>
+    <p class="byline"><b>Alejandro Beltran</b> · Local Threshold Evaluation (LTE)</p>
+    <p class="lede">Agentic AI systems can become operationally unreliable <b>before</b> they produce a single visible hallucination. LTE is a pre-deployment harness that catches the drift early — and records what a deploying organisation had reason to know before it went live.</p>
+  </div>
+
+  <div class="console-wrap">
+    <div class="console" id="console">
+      <div class="console-head">
+        <span class="chead-title mono"><span class="pulse" id="pulse"></span> LTE · rolling-stress harness</span>
+        <span class="chead-sub mono">three models · one protocol · context grows each turn</span>
+        <button class="chead-btn" id="restart" style="margin-left:auto;">restart ⟳</button>
+      </div>
+      <div class="task-strip mono"><b>Protocol</b> — the same fixed task is re-issued on every turn while the context window fills. LTE scores how each reply behaves — latency, length, repetition, carried state — alongside whether the text reads correctly.</div>
+      <div class="probe-strip" id="probe"></div>
+      <div class="lanes" id="lanes"></div>
+      <div class="console-foot">
+        <button class="chead-btn" id="playpause">⏸&nbsp;pause</button>
+        <input class="scrub" id="scrub" type="range" min="0" max="29" value="0" aria-label="turn scrubber" />
+        <span class="foot-step mono">turn&nbsp;<b id="turnnum">1</b>&nbsp;/&nbsp;30</span>
+      </div>
+    </div>
+    <p class="console-cap">Three real harness runs, one protocol. <b style="color:var(--ink)">Mistral-7B</b> returns a valid five-bullet summary on every turn, yet its per-step latency climbs past the ceiling and the harness aborts. <b style="color:var(--ink)">SmolLM</b> never produces the format and collapses into repetition within three turns. <b style="color:var(--ink)">Claude Haiku</b> holds all thirty. The failure here is invisible in the text.</p>
+  </div>
+
+  <section>
+    <h2 class="sec">Why it matters</h2>
+    <p class="body-p">Pre-deployment governance stops at procurement. Risk classifications, model cards, and demonstration cases judge a system under assessment conditions. Deployment is a different setting: context accumulates across a long, multi-turn session, and the model's behaviour shifts as the window fills.</p>
+    <p class="body-p muted">That gap is where the dangerous failures occur. When harm surfaces, liability turns on one question: what did the deploying organisation have reason to know about the model's reliability, and when? No standard instrument produces that record, so responsibility defaults downward — onto the analyst running a pipeline they neither designed nor controlled.</p>
+    <p class="body-p">LTE produces the record. A pre-deployment run that returns an explicit signal, and is retained, turns a deployment into a traceable decision. The aim is narrow: make the evidence exist, so the choice to go live leaves a mark.</p>
+  </section>
+
+  <section>
+    <h2 class="sec">What LTE watches</h2>
+    <p class="body-p muted" style="margin-bottom:22px;">Five operational failure modes. Each is visible to instrumentation well before any output would read as wrong to a human reviewer.</p>
+    <div class="precursors">
+      <div class="pc"><div class="pc-name"><span class="pc-dot" style="background:var(--s-retry)"></span>Over-expansion</div><div class="pc-desc">Produces more than the task asks for. Bloats latency, burns the token budget, breaks downstream parsers.</div></div>
+      <div class="pc"><div class="pc-name"><span class="pc-dot" style="background:var(--s-repair)"></span>Near-cap pressure</div><div class="pc-desc">Pushes against the output limit; structure breaks at the tail — a JSON object cut off before its closing brace.</div></div>
+      <div class="pc"><div class="pc-name"><span class="pc-dot" style="background:var(--s-escalate)"></span>Context decay</div><div class="pc-desc">Mishandles carried state as the window fills. The text stays plausible; the determinations drift.</div></div>
+      <div class="pc"><div class="pc-name"><span class="pc-dot" style="background:var(--s-escalate)"></span>Latency cliff</div><div class="pc-desc">Response time under growing context outruns what downstream systems tolerate. Nine seconds a step is non-functional, whatever the output says.</div></div>
+      <div class="pc"><div class="pc-name"><span class="pc-dot" style="background:var(--s-abort)"></span>Repetition &amp; persistent failure</div><div class="pc-desc">Recycles prior output. One bad step is noise; three in a row is a state the system has entered.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">The intervention ladder</h2>
+    <p class="body-p muted" style="margin-bottom:6px;">Each failure mode that trips moves the agent one rung up the ladder. Abort is reached when failure persists — three consecutive failed steps under the same conditions — and the harness stops the agent before the output is used.</p>
+    <div class="ladder-big">
+      <div class="lr"><div class="lr-name" style="color:var(--s-continue)">continue</div><div class="lr-arrow">→</div></div>
+      <div class="lr"><div class="lr-name" style="color:var(--s-retry)">retry</div><div class="lr-arrow">→</div></div>
+      <div class="lr"><div class="lr-name" style="color:var(--s-repair)">repair</div><div class="lr-arrow">→</div></div>
+      <div class="lr"><div class="lr-name" style="color:var(--s-escalate)">escalate</div><div class="lr-arrow">→</div></div>
+      <div class="lr"><div class="lr-name" style="color:var(--s-abort)">abort</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">The finding</h2>
+    <div class="finding">
+      <p class="body-p">Benchmark scores and operational reliability diverge. A model that looks safe in a one-shot probe can still fail a long session.</p>
+    </div>
+    <p class="body-p muted">Across seven language models — five run locally, two via API — and six runs each, every model landed in the same intervention regime on every run; the classification is reproducible. Then the benchmark and the stress test disagreed: <b style="color:var(--ink)">Mistral-7B logged fewer benchmark contract failures than its counterparts, yet aborted under rolling stress, while models with worse benchmark scores stayed stable.</b> A procurement process relying on benchmark scores alone would have made the wrong call.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n">7</div><div class="l">models tested</div></div>
+      <div class="stat"><div class="n">6×</div><div class="l">runs per model</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">failure modes tracked</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">audit trail per run</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">The audit trail</h2>
+    <p class="body-p">When LTE intervenes it emits a structured record — which signals tripped, when, and what intervention state the agent reached — and retains it.</p>
+    <p class="body-p muted">LTE assigns no blame. It records what an organisation knew about a model before it went live, the evidentiary basis a liability finding would rest on. Liability turns on foreseeability, and foreseeability needs an instrument that could have caught the problem in advance. Most deployments run without one.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="when-to-stop.pdf" target="_blank" rel="noopener">Read the paper →</a>
+      <a class="btn btn-ghost" href="https://github.com/AlejandroBeltranA/local_threshold_evaluation" target="_blank" rel="noopener">Code on GitHub ↗</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-cite">Beltran, A. (2026). <i>When to stop: operational reliability and enforceable accountability for agentic AI in government deployment.</i> Working paper. <a href="https://github.com/AlejandroBeltranA/local_threshold_evaluation">github.com/AlejandroBeltranA/local_threshold_evaluation</a></p>
+  </div>
+</footer>
+
+<script src="scaffold-data.js"></script>
+<script>
+(function(){
+  var DATA = window.LTE_RUNS;
+  if(!DATA){ return; }
+
+  var LAT_SCALE = 10000, LAT_THRESH = 8000;      // ms — bar full scale and abort ceiling
+  var STEP_SLOW = 950, STEP_FAST = 360;          // ms per turn: linger through the action, skim the steady tail
+  var SC = { continue:'var(--s-continue)', retry:'var(--s-retry)', repair:'var(--s-repair)', escalate:'var(--s-escalate)', abort:'var(--s-abort)' };
+  var RANK = { continue:0, retry:1, repair:2, escalate:3, abort:4 };
+
+  var REASON = { latency:'latency over ceiling', lorr:'repetition / overrun', expansion:'over-expansion' };
+  var TRIG = { latency_cliff:'latency cliff', persistent_failure:'persistent contract failure', over_expansion:'expansion drift', context_decay:'context decay', near_cap_pressure:'context near cap', repetition:'repetition' };
+  var CAP_WHY = {
+    latency_cliff_mistral7b:'Each turn re-derives the same valid five bullets \u2014 owner held, format intact, no internal repetition loop, so the content signals stay clean. What moves is latency: 3.5s to 9.5s, past the ceiling and held there. LTE aborts on the dynamics the text never shows.',
+    instant_collapse_smollm:'The model never produced the format. It emitted Python, then repeated itself almost verbatim. Repetition tripped three turns running and LTE aborted at turn 3.',
+    steady_state_claude_haiku:'Thirty turns, five verb-led bullets each, latency flat. The control track. Its \u201cescalate\u201d verdict is an eval artefact \u2014 an owner check on a prompt that has no owner. The model held throughout.'
+  };
+  var SHORT = { latency_cliff_mistral7b:'Mistral-7B', instant_collapse_smollm:'SmolLM-1.7B', steady_state_claude_haiku:'Claude Haiku' };
+  var TAG = { latency_cliff_mistral7b:'silent latency drift', instant_collapse_smollm:'abrupt collapse', steady_state_claude_haiku:'stable control' };
+  var TAGCLASS = { latency_cliff_mistral7b:'t-drift', instant_collapse_smollm:'t-collapse', steady_state_claude_haiku:'t-control' };
+
+  // Per-step intervention state, derived from the run\u2019s real fields.
+  function laneState(run, s){
+    if(run.id === 'steady_state_claude_haiku') return 'continue';   // control track never fails
+    var cf = s.cf;
+    if(cf <= 0) return 'continue';
+    if(cf === 1) return 'retry';
+    if(cf === 2) return 'escalate';
+    return 'abort';
+  }
+
+  function lat(ms){ return (ms/1000).toFixed(1)+'s'; }
+  function pct(frac){ var v = frac*100; return v < 1 ? v.toFixed(2)+'%' : v.toFixed(0)+'%'; }
+
+  var lanesEl = document.getElementById('lanes');
+  var lanes = DATA.order.map(function(id){
+    var run = DATA.runs[id];
+    var el = document.createElement('div');
+    el.className = 'lane' + (id === 'steady_state_claude_haiku' ? ' is-control' : '');
+    el.innerHTML =
+      '<div class="lane-head">'+
+        '<div><div class="lane-model">'+run.model+'</div><div class="lane-backend">'+run.backend+' · '+run.total+' turns</div><div class="lane-tag '+TAGCLASS[id]+'">'+TAG[id]+'</div></div>'+
+        '<div class="lane-statebox"><div class="lane-state">continue</div><div class="lane-turn">turn 1 / '+run.total+'</div></div>'+
+      '</div>'+
+      '<div class="gauge">'+
+        '<div class="gauge-top"><span class="gauge-label">per-step latency</span><span class="gauge-val j-lat">—</span></div>'+
+        '<div class="gauge-bar"><div class="gauge-thresh"></div><div class="gauge-fill lat j-latbar"></div></div>'+
+      '</div>'+
+      '<div class="gauge">'+
+        '<div class="gauge-top"><span class="gauge-label">context window</span><span class="gauge-val j-ctx">—</span></div>'+
+        '<div class="gauge-bar"><div class="gauge-fill j-ctxbar"></div></div>'+
+      '</div>'+
+      '<div class="chips"><span class="chip j-fmt">format</span><span class="chip j-sig">nominal</span></div>'+
+      '<div class="lane-read j-read"></div>'+
+      '<div class="bubble-label j-blabel">latest output</div>'+
+      '<div class="bubble j-bubble"></div>'+
+      '<div class="cap j-cap"></div>';
+    lanesEl.appendChild(el);
+    return {
+      run:run, el:el,
+      state:el.querySelector('.lane-state'), turn:el.querySelector('.lane-turn'),
+      latv:el.querySelector('.j-lat'), latbar:el.querySelector('.j-latbar'),
+      ctxv:el.querySelector('.j-ctx'), ctxbar:el.querySelector('.j-ctxbar'),
+      fmt:el.querySelector('.j-fmt'), sig:el.querySelector('.j-sig'),
+      read:el.querySelector('.j-read'),
+      blabel:el.querySelector('.j-blabel'),
+      bubble:el.querySelector('.j-bubble'), cap:el.querySelector('.j-cap'),
+      lastText:null
+    };
+  });
+
+  // Single-shot probe baseline — each run's fresh-context (turn 0) format result.
+  (function(){
+    var items = DATA.order.map(function(id){
+      var pass = DATA.runs[id].steps[0].fmt;
+      return '<div class="probe-item"><span class="probe-model">'+SHORT[id]+'</span>'+
+             '<span class="probe-verdict '+(pass?'ok':'bad')+'">'+(pass?'\u2713 pass':'\u2717 fail')+'</span></div>';
+    }).join('');
+    document.getElementById('probe').innerHTML =
+      '<div class="probe-cap"><b>Single-shot probe</b> — fresh context, one turn. What a procurement check sees.</div>'+
+      '<div class="probe-row">'+items+'</div>'+
+      '<div class="probe-note"><b>Mistral and Claude are indistinguishable here — both pass.</b> The divergence only appears under sustained load \u2193</div>';
+  })();
+
+  var MAXIDX = Math.max.apply(null, lanes.map(function(l){ return l.run.total - 1; }));
+  var pulse = document.getElementById('pulse'),
+      scrub = document.getElementById('scrub'),
+      turnnum = document.getElementById('turnnum'),
+      playBtn = document.getElementById('playpause'),
+      restartBtn = document.getElementById('restart');
+  scrub.max = MAXIDX;
+
+  var g = 0, holdc = 0, playing = true;
+
+  function buildCap(run){
+    var triggers = run.triggers.map(function(t){ return '<span class="chip '+(run.abort!==null?'bad':'ok')+'">'+(TRIG[t]||t)+'</span>'; }).join('');
+    var why = CAP_WHY[run.id] || '';
+    if(run.abort !== null){
+      return '<div class="cap-head">ABORTED · turn '+(run.abort+1)+' / '+run.total+'</div>'+
+             '<div>'+why+'</div><div class="cap-triggers">'+triggers+'</div>';
+    }
+    return '<div class="cap-head">HELD · '+run.total+' / '+run.total+' · control track</div>'+
+           '<div>'+why+'</div><div class="cap-triggers">'+triggers+'</div>';
+  }
+
+  function renderLane(l){
+    var run = l.run, idx = Math.min(g, run.total - 1), done = g >= run.total - 1;
+    var s = run.steps[idx];
+    var st = done ? laneState(run, run.steps[run.total - 1]) : laneState(run, s);
+
+    l.state.textContent = st;
+    l.state.style.color = SC[st];
+    l.turn.textContent = 'turn ' + (idx + 1) + ' / ' + run.total;
+
+    // latency
+    l.latv.textContent = lat(s.lat);
+    var hot = s.lat >= LAT_THRESH;
+    l.latbar.style.width = Math.min(100, s.lat / LAT_SCALE * 100).toFixed(1) + '%';
+    l.latbar.classList.toggle('hot', hot);
+
+    // context window
+    l.ctxv.textContent = pct(s.ctx);
+    l.ctxbar.style.width = Math.min(100, s.ctx * 100).toFixed(2) + '%';
+
+    // format chip
+    l.fmt.textContent = s.fmt ? 'format \u2713' : 'format \u2717';
+    l.fmt.className = 'chip j-fmt ' + (s.fmt ? 'ok' : 'bad');
+
+    // signal chip
+    if(st === 'abort' || (s.fail && s.reasons.length)){
+      var r = s.reasons[0];
+      l.sig.textContent = REASON[r] || (r || 'failure');
+      l.sig.className = 'chip j-sig ' + (st === 'abort' ? 'bad' : 'warn');
+    } else if(s.fail){
+      l.sig.textContent = 'failure'; l.sig.className = 'chip j-sig warn';
+    } else {
+      l.sig.textContent = 'nominal'; l.sig.className = 'chip j-sig';
+    }
+
+    // money moment: output still valid, but latency past the ceiling
+    if(hot && s.fmt && st !== 'abort'){
+      l.read.textContent = 'valid output \u00b7 latency past the ceiling';
+      l.read.classList.add('show');
+    } else {
+      l.read.classList.remove('show');
+    }
+
+    // output bubble
+    var same = idx > 0 && run.steps[idx - 1].text === s.text;
+    l.blabel.textContent = same ? 'output · unchanged from previous turn' : 'latest output';
+    l.blabel.classList.toggle('same', same);
+    if(s.text !== l.lastText){
+      l.bubble.textContent = s.text;
+      l.lastText = s.text;
+      l.bubble.classList.remove('changed'); void l.bubble.offsetWidth; l.bubble.classList.add('changed');
+    }
+
+    // end-of-run callout + lane tint
+    l.el.classList.toggle('is-abort', done && run.abort !== null);
+    l.el.classList.toggle('is-done', done);
+    if(done){
+      if(!l.cap.classList.contains('show')){
+        l.cap.innerHTML = buildCap(run);
+        l.cap.className = 'cap j-cap show ' + (run.abort !== null ? 'abort' : 'control');
+      }
+    } else if(l.cap.classList.contains('show')){
+      l.cap.className = 'cap j-cap';
+    }
+
+    return RANK[st];
+  }
+
+  function render(){
+    var worst = 0;
+    lanes.forEach(function(l){ worst = Math.max(worst, renderLane(l)); });
+    var wkey = Object.keys(RANK).filter(function(k){ return RANK[k] === worst; })[0] || 'continue';
+    pulse.style.background = SC[wkey]; pulse.style.color = SC[wkey];
+    scrub.value = g;
+    turnnum.textContent = (g + 1);
+  }
+
+  var timer = null;
+  function schedule(){
+    clearTimeout(timer);
+    if(!playing) return;
+    if(g >= MAXIDX){ playing = false; playBtn.innerHTML = '\u21ba\u00a0replay'; return; }   // play once, then hold
+    var delay = g < 18 ? STEP_SLOW : STEP_FAST;   // both aborts land by turn 18; skim the steady remainder
+    timer = setTimeout(function(){ g++; render(); schedule(); }, delay);
+  }
+
+  function setPlaying(p){
+    playing = p;
+    playBtn.innerHTML = p ? '\u23f8\u00a0pause' : (g >= MAXIDX ? '\u21ba\u00a0replay' : '\u25b6\u00a0play');
+    if(p) schedule(); else clearTimeout(timer);
+  }
+  playBtn.addEventListener('click', function(){ if(g >= MAXIDX){ g = 0; render(); } setPlaying(!playing); });
+  restartBtn.addEventListener('click', function(){ g = 0; render(); setPlaying(true); });
+  scrub.addEventListener('input', function(){ setPlaying(false); g = +scrub.value; render(); });
+
+  render();
+  setPlaying(true);
+})();
+</script>
+</body>
+</html>

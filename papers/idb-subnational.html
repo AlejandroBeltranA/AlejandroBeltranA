@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Subnational Fiscal Data for Latin America — Alejandro Beltran</title>
+<meta name="description" content="Interactive maps of subnational public finance across ten Latin American countries, built for the Inter-American Development Bank by Alejandro Beltran." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4f3ee;
+    --ink: #15151a;
+    --muted: #5e5d66;
+    --faint: #9b9aa1;
+    --line: rgba(21,21,26,0.11);
+    --card: #ffffff;
+    --accent: oklch(0.55 0.13 245);
+    --accent-2: oklch(0.6 0.14 245);
+    --accent-bright: oklch(0.7 0.13 245);
+    --accent-soft: oklch(0.55 0.13 245 / 0.10);
+    --disp: "Space Grotesk", system-ui, sans-serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; }
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+  .mono { font-family: var(--mono); }
+  .display { font-family: var(--disp); font-weight: 600; letter-spacing: -0.02em; }
+  .tag { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; }
+  .accent { color: var(--accent); }
+  .dot { width: 7px; height: 7px; border-radius: 4px; background: var(--accent); display: inline-block; }
+
+  /* top bar */
+  .nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .back { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; color: var(--muted); font-size: 14px; transition: color .15s; }
+  .back:hover { color: var(--ink); }
+  .back .brand-mark { width: 16px; height: 16px; border: 2px solid var(--accent); border-radius: 5px; }
+  .nav-cta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); text-decoration: none; }
+  .nav-cta:hover { color: var(--accent); }
+
+  /* hero */
+  .hero { padding: 66px 0 18px; }
+  .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--accent); margin-bottom: 18px; }
+  .kicker { font-family: var(--mono); font-size: 12.5px; color: var(--faint); margin-bottom: 6px; letter-spacing: 0.02em; }
+  h1.title { font-size: clamp(32px, 4.4vw, 50px); line-height: 1.06; margin: 0 0 22px; max-width: 16ch; text-wrap: balance; }
+  .lede { font-size: 18.5px; line-height: 1.62; color: var(--muted); max-width: 620px; margin: 0; }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  .stats { display: flex; gap: 0; margin-top: 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .stat { padding: 20px 34px 20px 0; margin-right: 34px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+  .stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+  .stat-num { font-family: var(--disp); font-weight: 600; font-size: 28px; letter-spacing: -0.03em; }
+  .stat-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  /* explorer */
+  .explorer { padding: 52px 0 20px; }
+  .sec-head { margin-bottom: 22px; }
+  .sec-title { font-size: 26px; margin: 0 0 8px; }
+  .sec-sub { font-size: 15.5px; color: var(--muted); max-width: 640px; margin: 0; }
+
+  .controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+  .ctl-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 9px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-family: var(--sans); font-size: 14px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 8px 15px; cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .levels { display: flex; gap: 8px; }
+  .lvl { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: all .15s; }
+  .lvl:hover { border-color: var(--accent); color: var(--accent); }
+  .lvl.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  .mapframe { position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); box-shadow: 0 10px 36px rgba(21,21,26,0.08); }
+  .mapframe iframe { display: block; width: 100%; height: 68vh; min-height: 480px; border: 0; }
+  .loader { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 11px; background: repeating-linear-gradient(135deg, #f0eee7 0 12px, #f5f3ec 12px 24px); color: var(--muted); font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.05em; transition: opacity .35s; }
+  .loader.hidden { opacity: 0; pointer-events: none; }
+  .spinner { width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .mapmeta { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .mapcap { font-size: 13.5px; color: var(--muted); }
+  .mapcap b { color: var(--ink); font-weight: 600; }
+  .openlink { font-family: var(--mono); font-size: 12.5px; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); padding-bottom: 1px; transition: border-color .15s; }
+  .openlink:hover { border-color: var(--accent); }
+
+  /* outputs */
+  .outputs { padding: 56px 0 80px; }
+  .ogrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .ocard { display: flex; flex-direction: column; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 13px; padding: 24px 22px; text-decoration: none; transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .ocard:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21,21,26,0.07); }
+  .oglyph { font-size: 20px; color: var(--accent); line-height: 1; }
+  .okind { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+  .oname { font-family: var(--disp); font-weight: 600; font-size: 18px; letter-spacing: -0.01em; line-height: 1.2; }
+  .odesc { font-size: 14px; color: var(--muted); line-height: 1.55; flex: 1; }
+  .octa { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin-top: 2px; }
+
+  footer { border-top: 1px solid var(--line); padding: 30px 0 50px; }
+  .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .foot-note { font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: 0.03em; }
+
+  @media (max-width: 820px) {
+    .ogrid { grid-template-columns: 1fr; }
+    .mapframe iframe { height: 72vh; }
+    .stat { padding-right: 22px; margin-right: 22px; }
+  }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="back" href="../index.html"><span class="brand-mark"></span><span>Alejandro Beltran</span></a>
+      <a class="nav-cta" href="https://subnacional.iadb.org/dashboard-countries" target="_blank" rel="noopener">Official IDB dashboard ↗</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="eyebrow mono tag"><span class="dot"></span>Inter-American Development Bank · 2021–2025</div>
+      <div class="kicker">Mapas interactivos de datos fiscales subnacionales</div>
+      <h1 class="display title">Subnational fiscal data for Latin America</h1>
+      <p class="lede">As a data-science consultant to the Inter-American Development Bank's Fiscal Management Division, I worked on subnational public finance across ten Latin American countries. I <b>homogenised and processed the underlying fiscal data</b>, <b>built the interactive maps</b> below, and co-authored the written outputs that came from it — a sector framework on decentralisation and a study of the property tax in Mexico.</p>
+      <div class="stats">
+        <div class="stat"><span class="stat-num">10</span><span class="stat-note">Countries studied</span></div>
+        <div class="stat"><span class="stat-num">9</span><span class="stat-note">Countries mapped</span></div>
+        <div class="stat"><span class="stat-num">13</span><span class="stat-note">Interactive maps</span></div>
+        <div class="stat"><span class="stat-num">2</span><span class="stat-note">Levels of government</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="explorer">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="display sec-title">Explore the maps</h2>
+        <p class="sec-sub">Select a country, then a level of government. Each map is live — pan, zoom, and click a region to read its fiscal indicators.</p>
+      </div>
+
+      <div class="controls">
+        <div>
+          <div class="ctl-label">Country</div>
+          <div class="chips" id="countryChips"></div>
+        </div>
+        <div id="levelWrap">
+          <div class="ctl-label">Level of government</div>
+          <div class="levels" id="levelBtns"></div>
+        </div>
+      </div>
+
+      <div class="mapframe">
+        <iframe id="mapFrame" title="Interactive fiscal map" loading="lazy"></iframe>
+        <div class="loader" id="mapLoader"><span class="spinner"></span>Loading map…</div>
+      </div>
+      <div class="mapmeta">
+        <div class="mapcap" id="mapCap"></div>
+        <a class="openlink" id="mapOpen" href="#" target="_blank" rel="noopener">Open full map in a new tab ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="outputs">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="display sec-title">What came out of it</h2>
+        <p class="sec-sub">The same fiscal data fed a public dashboard at the IDB and two written outputs.</p>
+      </div>
+      <div class="ogrid">
+        <a class="ocard" href="https://subnacional.iadb.org/dashboard-countries" target="_blank" rel="noopener">
+          <span class="oglyph">◎</span>
+          <span class="okind">Live tool · IDB</span>
+          <span class="oname">Subnational fiscal dashboard</span>
+          <span class="odesc">The maps in their official home at the Inter-American Development Bank, alongside the full set of fiscal indicators.</span>
+          <span class="octa">Open dashboard ↗</span>
+        </a>
+        <a class="ocard" href="https://www.iadb.org/en/who-we-are/topics/modernization-state/sector-framework-modernization-state" target="_blank" rel="noopener">
+          <span class="oglyph">▤</span>
+          <span class="okind">Inter-American Development Bank · 2024</span>
+          <span class="oname">Decentralization &amp; Subnational Governments Sector Framework</span>
+          <span class="odesc">A co-authored framework for more effective subnational management across Latin America and the Caribbean — building institutional capacity, digital tools, and the right incentives for governments delivering health, education, and infrastructure.</span>
+          <span class="octa">Read at iadb.org ↗</span>
+        </a>
+        <a class="ocard" href="https://ideas.repec.org/p/ays/ispwps/paper2513.html" target="_blank" rel="noopener">
+          <span class="oglyph">◆</span>
+          <span class="okind">Working paper · ICEPP, GSU · 2025</span>
+          <span class="oname">The property tax in Mexico</span>
+          <span class="odesc">Asymmetric assignment of cadastral management and the role of local capacity. With Martinez-Vazquez, Muñoz &amp; Slack.</span>
+          <span class="octa">Read the paper ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container foot-inner">
+      <a class="back" href="../index.html"><span class="brand-mark"></span><span>Back to Alejandro Beltran</span></a>
+      <span class="foot-note">Maps built with Leaflet · data homogenised across ten countries</span>
+    </div>
+  </footer>
+
+  <script>
+    var MAPS = [
+      { country: 'México',      level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/mex_mun_leaf_v2.html' },
+      { country: 'México',      level: 'Estados',       url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/mex_est_leaf_v2.html' },
+      { country: 'Colombia',    level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/col_mun_leaf_v2.html' },
+      { country: 'Colombia',    level: 'Departamentos', url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/col_dep_leaf_v2.html' },
+      { country: 'Brasil',      level: 'Municípios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/bra_mun_leaf_v2.html' },
+      { country: 'Brasil',      level: 'Estados',       url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/bra_est_leaf_v2.html' },
+      { country: 'Perú',        level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/f4d043b7f65009f372b9d97110350e2c3d0cd112/per_mun_leaf_v2.html' },
+      { country: 'Perú',        level: 'Departamentos', url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/f4d043b7f65009f372b9d97110350e2c3d0cd112/per_dep_leaf_v2.html' },
+      { country: 'Chile',       level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/chl_mun_leaf_v2.html' },
+      { country: 'Argentina',   level: 'Provincias',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/0c0674a71ef4c281e26fa956ce264a96d14d9df4/arg_dep_leaf_v2.html' },
+      { country: 'Uruguay',     level: 'Departamentos', url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/bc3352f6b21df2aaed3e6f62791d1f8ef343f5d3/uru_dep_leaf_v2.html' },
+      { country: 'Guatemala',   level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/33acdbb580c71f16fe402233ea1a22ae6748c54c/gtm_mun_leaf_v2.html' },
+      { country: 'El Salvador', level: 'Municipios',    url: 'https://rawcdn.githack.com/AlejandroBeltranA/mapas/11ec8949828157a2fa617e7db15c0dc4f601733c/slv_mun_leaf_v2.html' }
+    ];
+
+    var order = [];
+    MAPS.forEach(function (m) { if (order.indexOf(m.country) === -1) order.push(m.country); });
+
+    var state = { country: order[0], level: null };
+    var chipsEl = document.getElementById('countryChips');
+    var levelWrap = document.getElementById('levelWrap');
+    var levelEl = document.getElementById('levelBtns');
+    var frame = document.getElementById('mapFrame');
+    var loader = document.getElementById('mapLoader');
+    var cap = document.getElementById('mapCap');
+    var openLink = document.getElementById('mapOpen');
+
+    function levelsFor(country) { return MAPS.filter(function (m) { return m.country === country; }); }
+    function current() {
+      var rows = levelsFor(state.country);
+      return rows.filter(function (m) { return m.level === state.level; })[0] || rows[0];
+    }
+
+    function renderChips() {
+      chipsEl.innerHTML = '';
+      order.forEach(function (c) {
+        var b = document.createElement('button');
+        b.className = 'chip' + (c === state.country ? ' active' : '');
+        b.textContent = c;
+        b.onclick = function () {
+          state.country = c;
+          state.level = levelsFor(c)[0].level;
+          renderChips(); renderLevels(); load();
+        };
+        chipsEl.appendChild(b);
+      });
+    }
+
+    function renderLevels() {
+      var rows = levelsFor(state.country);
+      levelWrap.style.display = rows.length > 1 ? '' : 'none';
+      levelEl.innerHTML = '';
+      rows.forEach(function (m) {
+        var b = document.createElement('button');
+        b.className = 'lvl' + (m.level === state.level ? ' active' : '');
+        b.textContent = m.level;
+        b.onclick = function () { state.level = m.level; renderLevels(); load(); };
+        levelEl.appendChild(b);
+      });
+    }
+
+    function load() {
+      var m = current();
+      state.level = m.level;
+      loader.classList.remove('hidden');
+      frame.src = m.url;
+      openLink.href = m.url;
+      cap.innerHTML = '<b>' + m.country + '</b> — ' + m.level + ' · live Leaflet map';
+    }
+
+    frame.addEventListener('load', function () {
+      if (frame.src) loader.classList.add('hidden');
+    });
+
+    renderChips();
+    state.level = levelsFor(state.country)[0].level;
+    renderLevels();
+    load();
+  </script>
+</body>
+</html>
