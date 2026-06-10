@@ -21,10 +21,14 @@
     display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .eyebrow{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
-  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
-    font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:13px;}
-  .toggle button{border:0;background:transparent;padding:6px 14px;cursor:pointer;color:var(--muted);}
+  .toggle{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:999px;
+    padding:2px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:13px;}
+  .toggle .globe{display:inline-flex;padding:0 4px 0 8px;color:var(--muted);}
+  .toggle button{border:0;background:transparent;padding:5px 12px;cursor:pointer;color:var(--muted);
+    border-radius:999px;}
+  .toggle button:hover{color:var(--ink);}
   .toggle button.active{background:var(--ink);color:#fff;}
+  @media(max-width:480px){ .toggle button{padding:5px 9px;} }
   .hero{padding:54px 0 30px;}
   h1{font-size:38px;line-height:1.15;margin:.2em 0 .35em;letter-spacing:-.01em;}
   .sub{font-size:18px;color:var(--muted);margin:0 0 18px;}
@@ -101,9 +105,10 @@
 <header class="site">
   <div class="topbar">
     <a class="backlink" href="../index.html">← Alejandro Beltran</a>
-    <div class="toggle" role="group" aria-label="language">
-      <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
-      <button id="btn-es" onclick="setLang('es')">ES</button>
+    <div class="toggle" role="group" aria-label="Language / Idioma">
+      <span class="globe" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c2.5 2.6 4 6.1 4 10s-1.5 7.4-4 10c-2.5-2.6-4-6.1-4-10s1.5-7.4 4-10z"/></svg></span>
+      <button id="btn-en" class="active" aria-pressed="true" lang="en" onclick="setLang('en')">English</button>
+      <button id="btn-es" aria-pressed="false" lang="es" onclick="setLang('es')">Español</button>
     </div>
   </div>
 </header>
@@ -312,8 +317,11 @@ function setLang(l){
     if(id==='t-quote'||id==='cap3'||id==='cap6') el.innerHTML = d[map[id]];
     else el.textContent = d[map[id]];
   }
-  document.getElementById('btn-en').classList.toggle('active', l==='en');
-  document.getElementById('btn-es').classList.toggle('active', l==='es');
+  for(const code of ['en','es']){
+    const btn = document.getElementById('btn-'+code);
+    btn.classList.toggle('active', l===code);
+    btn.setAttribute('aria-pressed', l===code ? 'true' : 'false');
+  }
 }
 setLang('en');
 </script>
