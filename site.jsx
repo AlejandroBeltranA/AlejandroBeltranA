@@ -99,6 +99,29 @@ function DemocracyWidget() {
   );
 }
 
+// ── Democracy Bench hero — cycling government decisions (from the demo finale) ──
+function DecisionWidget() {
+  const items = [
+    'whether your benefit claim is flagged as fraud',
+    'whether your visa is refused, with no reasons given',
+    'whether your protest is allowed to go ahead',
+    'how your case is triaged by the NHS',
+    'whether your street is policed by prediction',
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((x) => (x + 1) % items.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="decidehero">
+      <div className="decidehero-lead"><span className="dot" style={{ background: 'var(--gold-bright)' }} /> Right now, AI could be deciding</div>
+      <div className="decidehero-cyc" key={i}>{items[i]}.</div>
+      <div className="decidehero-foot">Democracy Bench measures whose values it uses.</div>
+    </div>
+  );
+}
+
 // ── auto-advancing live preview of the IDB maps ──
 function MapsCycler() {
   const maps = [
@@ -228,7 +251,7 @@ function Featured() {
   return (
     <section className="featured-wrap" id="featured">
       <div className="container">
-        <div className="featured">
+        <div className="featured win">
           <div className="featured-body">
             <div className="mono tag featured-eyebrow"><span className="dot" />{f.tag}</div>
             <div className="mono featured-venue">{f.event}</div>
@@ -247,7 +270,7 @@ function Featured() {
             </div>
           </div>
           <div className="featured-vis">
-            <DemocracyWidget />
+            <DecisionWidget />
           </div>
         </div>
       </div>

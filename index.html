@@ -20,6 +20,8 @@
     --accent-2: oklch(0.6 0.14 245);
     --accent-bright: oklch(0.7 0.13 245);
     --accent-soft: oklch(0.55 0.13 245 / 0.12);
+    --gold: #d8a64a;
+    --gold-bright: #e9c25f;
     --disp: "Space Grotesk", system-ui, sans-serif;
     --sans: "IBM Plex Sans", system-ui, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -105,6 +107,21 @@
   .featured.paper .btn-primary:hover { background: #d11722; }
   .btn-doi { font-size: 13px; color: rgba(244,243,238,0.7); text-decoration: none; border-bottom: 1px solid rgba(244,243,238,0.25); padding-bottom: 2px; }
   .btn-doi:hover { color: #f0868d; border-color: #f0868d; }
+  /* gold accent for the hackathon winner (Democracy Bench hero) */
+  .featured.win { box-shadow: inset 0 2px 0 var(--gold-bright); }
+  .featured.win .featured-eyebrow { color: var(--gold-bright); white-space: nowrap; align-items: center; gap: 10px; }
+  .featured.win .featured-eyebrow .dot { background: var(--gold-bright); }
+  .featured.win .fstat-num { color: var(--gold-bright); }
+  .featured.win .btn-primary { background: var(--gold); color: #1c1407; font-weight: 600; }
+  .featured.win .btn-primary:hover { background: var(--gold-bright); }
+  .featured.win .featured-vis { border-left-color: rgba(233,194,95,0.18); }
+  /* cycling government-decisions graphic in the winner hero */
+  .decidehero { width: 100%; font-family: var(--disp); }
+  .decidehero-lead { display: flex; align-items: center; gap: 9px; font-size: 14.5px; font-weight: 500; color: rgba(244,243,238,0.6); margin-bottom: 16px; }
+  .decidehero-lead .dot { flex: 0 0 auto; width: 9px; height: 9px; }
+  .decidehero-cyc { font-size: clamp(20px, 2.1vw, 27px); font-weight: 600; line-height: 1.32; letter-spacing: -0.01em; color: var(--gold-bright); min-height: 4.3em; animation: fadeUp .5s ease; }
+  .decidehero-foot { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); font-family: var(--mono); font-size: 11px; letter-spacing: 0.03em; color: rgba(244,243,238,0.42); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
 
   /* capture chart */
   .chart-card { width: 100%; }
