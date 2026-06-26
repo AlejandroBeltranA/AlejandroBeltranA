@@ -93,7 +93,7 @@ function DemocracyWidget() {
           <div className="widget-num">0.71<span> / 1.00</span></div>
           <div className="mono tag" style={{ color: 'var(--faint)', marginTop: 2 }}>closest model · still a third off</div>
         </div>
-        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>🏆 GovHack 2026<br />Challenge 3 winner</span>
+        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>🏆 Challenge 3 winner<br />i.AI × ElevenLabs 2026</span>
       </div>
     </div>
   );
