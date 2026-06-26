@@ -65,6 +65,40 @@ function ThresholdMonitor() {
   );
 }
 
+// ── Democracy Bench (GovHack winner) — closeness-to-the-public leaderboard ──
+function DemocracyWidget() {
+  const rows = [
+    ['🇨🇳 DeepSeek', 0.71], ['🇨🇦 Command R', 0.70], ['🇺🇸 Gemini 2.5 Flash', 0.60],
+    ['🇫🇷 Mistral Small', 0.60], ['🇺🇸 GPT-4o-mini', 0.55], ['🇺🇸 Claude 3 Haiku', 0.55],
+  ];
+  return (
+    <div className="widget">
+      <div className="widget-head">
+        <span className="mono tag dot-row"><span className="dot" /> closeness to the UK public</span>
+        <span className="mono" style={{ color: 'var(--faint)', fontSize: 12 }}>6 models</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 14 }}>
+        {rows.map(([name, v]) => (
+          <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className="mono" style={{ flex: '0 0 134px', fontSize: 11.5, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
+            <span style={{ flex: 1, height: 7, background: 'var(--accent-soft)', borderRadius: 4, overflow: 'hidden' }}>
+              <span style={{ display: 'block', height: '100%', width: `${v * 100}%`, background: 'var(--accent)', borderRadius: 4 }} />
+            </span>
+            <span className="mono" style={{ flex: '0 0 auto', fontSize: 11.5, color: 'var(--accent)', fontWeight: 500 }}>{v.toFixed(2)}</span>
+          </div>
+        ))}
+      </div>
+      <div className="widget-foot">
+        <div>
+          <div className="widget-num">0.71<span> / 1.00</span></div>
+          <div className="mono tag" style={{ color: 'var(--faint)', marginTop: 2 }}>closest model · still a third off</div>
+        </div>
+        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>🏆 GovHack 2026<br />Challenge 3 winner</span>
+      </div>
+    </div>
+  );
+}
+
 // ── auto-advancing live preview of the IDB maps ──
 function MapsCycler() {
   const maps = [
@@ -279,7 +313,7 @@ function Marquee({ p, flip }) {
         </div>
       </div>
       <div className="marquee-vis">
-        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : <ThresholdMonitor />}
+        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : p.widget === 'democracy' ? <DemocracyWidget /> : <ThresholdMonitor />}
       </div>
     </div>
   );
