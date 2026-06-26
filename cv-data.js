@@ -42,7 +42,7 @@ window.CV = {
     event: 'i.AI × ElevenLabs',
     title: 'Democracy Bench',
     blurb: 'Does the AI moving into government casework — benefits, visas, reoffending risk — actually share the public’s values? Democracy Bench scores six frontier models against real British Social Attitudes data: they miss the public on contested policy, their safeguards react to the word “AI” rather than the harm, and you can’t prompt a public’s values in from the outside. Because sovereign AI is not just owning the model — it’s proving it serves the public.',
-    cta: 'Open the live demo',
+    cta: 'Open the demo',
     href: 'democracy-bench/',
     stats: [
       ['6', 'frontier models'],
