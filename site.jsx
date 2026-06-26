@@ -93,7 +93,7 @@ function DemocracyWidget() {
           <div className="widget-num">0.71<span> / 1.00</span></div>
           <div className="mono tag" style={{ color: 'var(--faint)', marginTop: 2 }}>closest model · still a third off</div>
         </div>
-        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>🏆 Challenge 3 winner<br />i.AI × ElevenLabs 2026</span>
+        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>🏆 Overall winner<br />i.AI × ElevenLabs 2026</span>
       </div>
     </div>
   );
@@ -228,12 +228,11 @@ function Featured() {
   return (
     <section className="featured-wrap" id="featured">
       <div className="container">
-        <div className="featured paper">
+        <div className="featured">
           <div className="featured-body">
-            <div className="mono tag featured-eyebrow"><span className="dot dot-red" />{f.tag}<span className="oa-pill">{f.oa}</span></div>
-            <div className="mono featured-venue">{f.venue}</div>
+            <div className="mono tag featured-eyebrow"><span className="dot" />{f.tag}</div>
+            <div className="mono featured-venue">{f.event}</div>
             <h2 className="display featured-title">{f.title}</h2>
-            <div className="mono featured-authors">{f.authors}</div>
             <p className="featured-blurb">{f.blurb}</p>
             <div className="featured-stats">
               {f.stats.map(([n, l]) => (
@@ -245,11 +244,10 @@ function Featured() {
             </div>
             <div className="featured-cta">
               <a className="btn-primary" href={f.href}>{f.cta} →</a>
-              <a className="btn-doi mono" href={f.doi} target="_blank" rel="noopener">DOI ↗</a>
             </div>
           </div>
           <div className="featured-vis">
-            <FeaturedFigure />
+            <DemocracyWidget />
           </div>
         </div>
       </div>
@@ -313,7 +311,7 @@ function Marquee({ p, flip }) {
         </div>
       </div>
       <div className="marquee-vis">
-        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : p.widget === 'democracy' ? <DemocracyWidget /> : <ThresholdMonitor />}
+        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : p.widget === 'democracy' ? <DemocracyWidget /> : p.widget === 'figure' ? <FeaturedFigure /> : <ThresholdMonitor />}
       </div>
     </div>
   );
