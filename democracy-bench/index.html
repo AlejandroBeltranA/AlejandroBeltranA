@@ -184,6 +184,8 @@
   .cnav-tab.on { color: var(--ink); border-bottom-color: var(--accent); }
   .cnav-num { font-family: var(--mono); font-size: 11px; color: var(--faint); }
   .cnav-tab.on .cnav-num { color: var(--accent); }
+  .cnav-back { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .15s; }
+  .cnav-back:hover { color: var(--ink); }
   .chapter { min-height: calc(100vh - 71px); padding: 60px 0 84px; }
   .ch-wrap { width: 100%; }
   .ch-title { font-family: var(--disp); font-weight: 600; letter-spacing: -0.03em; font-size: clamp(31px, 4.3vw, 56px); line-height: 1.07; margin: 20px 0 28px; max-width: 18em; text-wrap: balance; }
@@ -912,6 +914,7 @@ function App(){
     <header className="cnav"><div className="container cnav-inner">
       <a className="brand" href="#top" onClick={(ev)=>{ ev.preventDefault(); setTab(0); window.scrollTo(0,0); }}><span className="brand-mark"></span><span className="brand-name">Democracy Bench</span></a>
       <nav className="cnav-tabs">{CHAPTERS.map((c,i)=><button key={i} className={`cnav-tab ${i===tab?'on':''}`} onClick={()=>{ setTab(i); window.scrollTo(0,0); }}><span className="cnav-num">{i+1}</span>{c}</button>)}</nav>
+      <a className="cnav-back" href="/">← Alejandro Beltran</a>
     </div></header>
     <main className="chapter"><CH /></main>
     <footer className="ch-foot"><div className="container" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:'8px 24px',padding:'22px 48px'}}>
