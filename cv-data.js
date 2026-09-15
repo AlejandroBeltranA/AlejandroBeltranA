@@ -24,9 +24,9 @@
 // ============================================================================
 window.CV = {
   name: 'Alejandro Beltran',
-  role: 'AI & Public Institutions Researcher',
+  role: 'AI & Government Researcher',
   org: 'The Alan Turing Institute',
-  bio: "I'm a researcher who studies how AI behaves once it's inside real institutions, and builds tools to hold it accountable, currently a Postdoctoral Research Associate at the Alan Turing Institute. On secondment to the UK Ministry of Justice I audited the modelling behind a national forecasting pipeline. My research argues that the most consequential AI failures in government are mundane rather than dramatic, and that meaningful human oversight is hardest exactly where a tool looks like a harmless productivity aid. I've also worked with the Inter-American Development Bank on research across Latin America. Before London I did my PhD at the University of Arizona, and before that I studied at the Universidad Autónoma de Sinaloa in Culiacán, México.",
+  bio: "I'm a Postdoctoral Research Associate at the Alan Turing Institute. I've worked with the UK Ministry of Justice and the Inter-American Development Bank.",
   bioLong: 'Researcher working at the seam of machine learning and public institutions. PhD, University of Arizona. Previously Universidad Autónoma de Sinaloa, Culiacán, México.',
   social: {
     x: 'https://x.com/beltranalexj',
@@ -34,7 +34,7 @@ window.CV = {
     github: 'https://github.com/alejandrobeltrana',
     email: 'mailto:alex.beltran91@gmail.com',
     scholar: 'https://scholar.google.com/citations?user=w-5RBX8AAAAJ',
-    cv: 'https://drive.google.com/file/d/1-h1dLKXxjEtdbhhRewUF8GCCqO7yZyu_/view',
+    cv: 'https://drive.google.com/file/d/1uixhCwnC-0oT_4XkQtPbtb2eGAn214bs/view?usp=sharing',
   },
   // the hero — Democracy Bench, overall winner of the AI in Government Hackathon 2026
   featured: {

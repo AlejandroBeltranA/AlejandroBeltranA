@@ -419,7 +419,7 @@ function Contact() {
       <div className="container contact-grid">
         <div>
           <h3 className="display contact-title">Let's talk.</h3>
-          <p className="lede" style={{ maxWidth: 460 }}>Questions, ideas, collaborations — especially if you work where AI meets public institutions. I'd like to hear from you.</p>
+          <p className="lede" style={{ maxWidth: 460 }}>Questions, ideas, collaborations — especially if you work where AI meets government. I'd like to hear from you.</p>
         </div>
         <div className="contact-links">
           {links.map(([l, h]) => (
