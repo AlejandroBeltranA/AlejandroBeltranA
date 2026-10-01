@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mapping Energy Usage to the Substation</title>
 <meta name="description" content="The household energy ABM extended with Northern Powergrid data on transformers and substations, from smart meters to grid supply points.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root {
@@ -383,10 +386,21 @@ table.have td:first-child { font-weight: 600; }
 
 </style>
 <style>
-.links { display: flex; gap: 8px; justify-content: flex-end; }
-.links a { font-size: 13px; padding: 5px 12px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--surface); }
-.links a:hover { border-color: var(--ink-2); }
-header p.intro { margin: 10px 0 0; max-width: 78ch; font-size: 16px; }
+/* the same bar as the homepage */
+:root { --disp: "Space Grotesk", system-ui, sans-serif; --sans: "IBM Plex Sans", system-ui, sans-serif; }
+.nav { position: sticky; top: 0; z-index: 50; background: var(--overlay); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule-2); }
+.nav-inner { max-width: 1340px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 32px); display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--ink); }
+.brand-mark { width: 18px; height: 18px; border: 2px solid #2a78d6; border-radius: 5px; }
+.brand-name { font-family: var(--disp); font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
+.nav-links { display: flex; align-items: center; gap: 26px; }
+.nav-links a { font-size: 14px; color: var(--ink-2); text-decoration: none; font-family: var(--sans); }
+.nav-links a:hover { color: var(--ink); }
+.nav-links a.btn { font-weight: 500; color: var(--page); background: var(--ink); padding: 8px 16px; border-radius: 7px; }
+header { padding-top: 10px; }
+header h1 { font-family: var(--disp); font-weight: 600; letter-spacing: -0.02em; font-size: clamp(28px, 3.2vw, 38px); line-height: 1.1; margin: 0 0 14px; }
+header p.intro { margin: 0; max-width: 72ch; font-family: var(--sans); font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+header .facts { margin-top: 22px; }
 .steps { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 18px; align-items: start; background: var(--surface); border: 1px solid var(--rule-2); border-radius: 8px; padding: 14px 18px; }
 .steps nav { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; }
 .steps nav button { font-size: 13px; padding: 4px 11px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); cursor: pointer; }
@@ -429,13 +443,17 @@ footer a { color: inherit; }
 </style>
 </head>
 <body>
+<div class="nav"><div class="nav-inner">
+  <a href="https://www.beltranalejandro.com" class="brand"><span class="brand-mark"></span><span class="brand-name">Alejandro Beltran</span></a>
+  <nav class="nav-links">
+    <a href="https://alejandrobeltrana.github.io/spdt_abm/abm_demo.html">SPDT ABM</a>
+    <a href="https://github.com/AlejandroBeltranA/abm-to-transformer">Code</a>
+    <a class="btn" href="https://www.beltranalejandro.com">Home</a>
+  </nav>
+</div></div>
 <div class="wrap">
   <header>
-    <div class="links">
-      <a href="https://www.beltranalejandro.com">Alejandro Beltran</a>
-      <a href="https://alejandrobeltrana.github.io/spdt_abm/abm_demo.html">SPDT ABM</a>
-    </div>
-    <h1 style="margin-top:14px">Mapping Energy Usage to the Substation</h1>
+    <h1>Mapping Energy Usage to the Substation</h1>
     <p class="intro">In this project we extend the household energy ABM by incorporating data from Northern Powergrid on transformers and substations. Below is a demo that shows how the data is aggregated from smart meters to the grid supply points. The current highlight is that our ABM correlates with real-world energy usage between 0.92 to 0.99 throughout the day. The map covers Newcastle and Sunderland; the comparison with meters runs month by month through 2024.</p>
     <dl class="facts" id="facts"></dl>
   </header>
