@@ -2430,7 +2430,7 @@ const STEPS = [
     go() { M.layers({ subs: false, tx: true, areas: true, homes: true, model: false, grid: false }); const t = M.find("tx", P.example); if (t) { M.reveal(t); setTimeout(() => M.zoomBy(2.5), 700); } else M.setView("newcastle"); } },
   { title: "The model", text: "The ABM reports energy usage at the LSOA level, which is the level it is currently validated at. The map shows which smart meters exist within each LSOA. In November 2023 the model runs 6% above the meters in Newcastle and 7% in Sunderland.",
     go() { M.select(null); M.metric("use"); M.layers({ subs: true, tx: false, areas: false, homes: false, model: true, grid: false }); M.setView("newcastle"); } },
-  { title: "Upstream", text: "The map shows the grid supply points, primaries that connect to each transformer across the region. Shown for reference only but future iterations could model capacity and chokepoints in service delivery. Each transformer is linked to its primary by the upstream site Northern Powergrid lists.",
+  { title: "Upstream", text: "The map shows the grid supply points and the primaries that connect to each transformer across the region. Shown for reference only, but future iterations could model capacity and chokepoints upstream. Each transformer is linked to its primary by the upstream site Northern Powergrid lists.",
     go() { M.select(null); M.layers({ subs: false, tx: true, areas: false, homes: false, model: false, grid: true }); M.setView("tw"); } },
 ];
 let step = -1;
