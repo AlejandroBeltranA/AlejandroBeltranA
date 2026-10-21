@@ -73,11 +73,9 @@ window.CV = {
   //   then add one { ... } block here. `sort` is YYYY-MM-DD and orders the list; `note` is optional.
   thoughts: [
     { slug: 'on-using-ai-to-evaluate-ai', title: 'On using AI to evaluate AI', date: 'September 2026', sort: '2026-09-28',
-      summary: 'I asked a frontier model to build a harness that would catch its own model family being quietly pressured into misbehaving. Twice it built one that could not fail.',
-      note: 'Originally written for LessWrong' },
+      summary: 'I asked a frontier model to build a harness that would catch its own model family being quietly pressured into misbehaving. Twice it built one that could not fail.' },
     { slug: 'who-controls-the-ai-inside-government', title: 'Who controls the AI inside government?', date: 'September 2026', sort: '2026-09-23',
-      summary: 'Control over AI in government is accumulating from the middle of bureaucracies, through workflows nobody signed off on. DemocracyBench shows how cheaply a model’s stated rights commitments move once it is told what the public wants.',
-      note: 'Originally written for LessWrong' },
+      summary: 'Control over AI in government is accumulating from the middle of bureaucracies, through workflows nobody signed off on. DemocracyBench shows how cheaply a model’s stated rights commitments move once it is told what the public wants.' },
   ],
   publications: [
     { group: 'Forthcoming', authors: 'Beltran, A., Tipuric, M., Malleson, N., Wagg, D., Arribas-Bel, D., Yue, K.', year: '2026', title: 'A multilevel agent-based model for household energy: a scenario planning digital twin', venue: 'In preparation', links: [['Interactive demo', 'https://alejandrobeltrana.github.io/spdt_abm/abm_demo.html'], ['Code', 'https://github.com/AlejandroBeltranA/spdt_abm']] },
