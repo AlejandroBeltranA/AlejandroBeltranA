@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thoughts — Alejandro Beltran</title>
+<meta name="description" content="Thoughts by Alejandro Beltran on AI, government and evaluation." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="thoughts.css" />
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="brand" href="/"><span class="brand-mark"></span><span class="brand-name">Alejandro Beltran</span></a>
+  <nav class="bar-links"><a href="/#work">Work</a><a href="/#publications">Publications</a><a href="/#contact">Contact</a></nav>
+</div></header>
+<main class="wrap">
+  <header class="list-head">
+    <div class="tag" style="color: var(--accent)">Thoughts</div>
+    <h1 class="display list-title">Thoughts</h1>
+    <p class="list-sub">Shorter pieces on AI in government, evaluation, and whatever I am working through. Written to think, not to be finished.</p>
+  </header>
+  <ul class="post-list" id="list"></ul>
+</main>
+<script src="../cv-data.js"></script>
+<script>
+  const posts = (window.CV.thoughts || []).slice().sort((a, b) => (a.sort < b.sort ? 1 : -1));
+  document.getElementById('list').innerHTML = posts.map((p) => `
+    <li><a class="post-row" href="${p.slug}/">
+      <div class="post-date">${p.date}</div>
+      <div>
+        <h2 class="post-title">${p.title}</h2>
+        <p class="post-summary">${p.summary}</p>
+        ${p.note ? `<div class="post-note">${p.note}</div>` : ''}
+      </div>
+    </a></li>`).join('') || '<li class="loading">Nothing here yet.</li>';
+</script>
+</body>
+</html>

@@ -177,7 +177,7 @@
   section[id] { scroll-margin-top: 84px; }
   /* chapter / tab layout */
   .cnav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-  .cnav-inner { display: flex; align-items: center; gap: 20px 28px; min-height: 70px; padding: 8px 0; flex-wrap: wrap; }
+  .cnav-inner { display: flex; align-items: center; gap: 20px 28px; min-height: 70px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
   .cnav-tabs { display: flex; gap: 2px; flex-wrap: wrap; }
   .cnav-tab { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 14.5px; color: var(--muted); background: transparent; border: none; border-bottom: 2px solid transparent; padding: 9px 14px; cursor: pointer; transition: color .15s; }
   .cnav-tab:hover { color: var(--ink); }
@@ -186,6 +186,8 @@
   .cnav-tab.on .cnav-num { color: var(--accent); }
   .cnav-back { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .15s; }
   .cnav-back:hover { color: var(--ink); }
+  .cnav-links { margin-left: auto; display: flex; gap: 20px; }
+  .cnav-links .cnav-back { margin-left: 0; }
   .chapter { min-height: calc(100vh - 71px); padding: 60px 0 84px; }
   .ch-wrap { width: 100%; }
   .ch-title { font-family: var(--disp); font-weight: 600; letter-spacing: -0.03em; font-size: clamp(31px, 4.3vw, 56px); line-height: 1.07; margin: 20px 0 28px; max-width: 18em; text-wrap: balance; }
@@ -696,7 +698,7 @@ function Explorer(){
 function Nav(){
   return (<header className="nav"><div className="container nav-inner">
     <a className="brand" href="#top"><span className="brand-mark"></span><span className="brand-name">Democracy Bench</span></a>
-    <nav className="nav-links"><a href="#diverge">Findings</a><a href="#why">The fix</a><a href="https://github.com/alejandrobeltrana" target="_blank" rel="noopener">Code ↗</a></nav>
+    <nav className="nav-links"><a href="#diverge">Findings</a><a href="#why">The fix</a><a href="https://github.com/AlejandroBeltranA/democracy-bench" target="_blank" rel="noopener">Code ↗</a></nav>
   </div></header>);
 }
 
@@ -914,7 +916,10 @@ function App(){
     <header className="cnav"><div className="container cnav-inner">
       <a className="brand" href="#top" onClick={(ev)=>{ ev.preventDefault(); setTab(0); window.scrollTo(0,0); }}><span className="brand-mark"></span><span className="brand-name">Democracy Bench</span></a>
       <nav className="cnav-tabs">{CHAPTERS.map((c,i)=><button key={i} className={`cnav-tab ${i===tab?'on':''}`} onClick={()=>{ setTab(i); window.scrollTo(0,0); }}><span className="cnav-num">{i+1}</span>{c}</button>)}</nav>
-      <a className="cnav-back" href="/">← Alejandro Beltran</a>
+      <div className="cnav-links">
+        <a className="cnav-back" href="https://github.com/AlejandroBeltranA/democracy-bench" target="_blank" rel="noopener">Code ↗</a>
+        <a className="cnav-back" href="/">← Alejandro Beltran</a>
+      </div>
     </div></header>
     <main className="chapter"><CH /></main>
     <footer className="ch-foot"><div className="container" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:'8px 24px',padding:'22px 48px'}}>

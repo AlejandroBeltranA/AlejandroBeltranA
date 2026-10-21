@@ -194,7 +194,7 @@ function Placeholder({ label, className = '', style = {} }) {
 // ── nav ──
 function Nav() {
   const D = window.CV;
-  const items = [['Work', '#work'], ['Publications', '#publications'], ['Contact', '#contact']];
+  const items = [['Work', '#work'], ['Thoughts', '#thoughts'], ['Publications', '#publications'], ['Contact', '#contact']];
   return (
     <header className="nav">
       <div className="container nav-inner">
@@ -267,6 +267,7 @@ function Featured() {
             </div>
             <div className="featured-cta">
               <a className="btn-primary" href={f.href}>{f.cta} →</a>
+              {f.repo && <a className="btn-ghost subtle" href={f.repo} target="_blank" rel="noopener">Code ↗</a>}
             </div>
           </div>
           <div className="featured-vis">
@@ -411,6 +412,35 @@ function Publications() {
 }
 
 // ── contact ──
+function Thoughts() {
+  const D = window.CV;
+  const posts = (D.thoughts || []).slice().sort((a, b) => (a.sort < b.sort ? 1 : -1)).slice(0, 4);
+  if (!posts.length) return null;
+  return (
+    <section id="thoughts" className="section">
+      <div className="container">
+        <div className="sec-head">
+          <h3 className="display sec-title">Thoughts</h3>
+          <a className="mono sec-link" href="thoughts/">all posts →</a>
+        </div>
+        <p className="sec-sub">Shorter pieces, written to think.</p>
+        <div className="wlist">
+          {posts.map((p) => (
+            <a key={p.slug} className="wrow" href={`thoughts/${p.slug}/`}>
+              <span className="mono wrow-date">{p.date}</span>
+              <span className="wrow-body">
+                <span className="display wrow-title">{p.title}</span>
+                <span className="wrow-summary">{p.summary}</span>
+              </span>
+              <span className="chev">→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Contact() {
   const D = window.CV;
   const links = [['Email', D.social.email], ['Google Scholar', D.social.scholar], ['GitHub', D.social.github], ['LinkedIn', D.social.linkedin], ['X / Twitter', D.social.x]];
@@ -445,6 +475,7 @@ function App() {
         <Hero />
         <Featured />
         <Work />
+        <Thoughts />
         <Publications />
         <Contact />
       </main>

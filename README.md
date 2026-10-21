@@ -17,6 +17,8 @@ I'm a Postdoctoral Research Associate at the Alan Turing Institute. I've worked 
     site.jsx      layout and components
     index.html    page shell and styles
     assets/, papers/, democracy-bench/   images and standalone pages
+    thoughts/     blog. One folder per post: index.html (copy of _post-template.html)
+                  + post.md (+ figs/). List entries live in cv-data.js → thoughts.
     CNAME         custom domain. Do not delete.
     .nojekyll     tells Pages to serve files as-is
 -->
