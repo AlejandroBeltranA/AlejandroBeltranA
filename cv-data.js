@@ -24,9 +24,9 @@
 // ============================================================================
 window.CV = {
   name: 'Alejandro Beltran',
-  role: 'AI & Government Researcher',
-  org: 'The Alan Turing Institute',
-  bio: "I'm a Postdoctoral Research Associate at the Alan Turing Institute. I've worked with the UK Ministry of Justice and the Inter-American Development Bank.",
+  role: 'Member of Technical Staff · Mubit Labs',
+  org: 'Mubit Labs',
+  bio: "I'm a Member of Technical Staff in Research and Evaluations at Mubit Labs. Before that I was a Postdoctoral Research Associate at the Alan Turing Institute, and I've worked with the UK Ministry of Justice and the Inter-American Development Bank.",
   bioLong: 'Researcher working at the seam of machine learning and public institutions. PhD, University of Arizona. Previously Universidad Autónoma de Sinaloa, Culiacán, México.',
   social: {
     x: 'https://x.com/beltranalexj',
