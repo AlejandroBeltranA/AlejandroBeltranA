@@ -65,6 +65,41 @@ function ThresholdMonitor() {
   );
 }
 
+// ── AI in High Places — which of the 67 deceptions each judge caught (from ai-in-high-places/data.js) ──
+function JudgesWidget() {
+  const judges = [
+    ["builder's own detector", '0000000000010001000100000000000000000000000001101000000000000000000', 134],
+    ["rule for the brief's definition", '0001000000000000000000000000000000000000010000000000000000000000000', 2],
+    ['rule for relayed approval', '1111111111011111111101001000111111110111101100111111111000001011100', 6],
+  ];
+  const [j, setJ] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setJ((x) => (x + 1) % judges.length), 2600);
+    return () => clearInterval(id);
+  }, []);
+  const [name, hits, falseAlarms] = judges[j];
+  const caught = hits.split('').filter((c) => c === '1').length;
+  return (
+    <div className="widget">
+      <div className="widget-head">
+        <span className="mono tag dot-row"><span className="dot" style={{ background: '#b3261e' }} /> 67 deceptions · one judge at a time</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(17, 1fr)', gap: 4, marginBottom: 14 }}>
+        {hits.split('').map((c, i) => (
+          <span key={i} style={{ aspectRatio: '1', borderRadius: 3, background: c === '1' ? '#b3261e' : '#ead8d6', transition: 'background .4s' }} />
+        ))}
+      </div>
+      <div className="widget-foot">
+        <div>
+          <div className="widget-num" style={{ color: '#b3261e' }}>{caught}<span> of 67 caught</span></div>
+          <div className="mono tag" style={{ color: 'var(--faint)', marginTop: 2 }}>{name}</div>
+        </div>
+        <span className="mono" style={{ fontSize: 10.5, color: 'var(--faint)', textAlign: 'right', lineHeight: 1.5 }}>+{falseAlarms} honest<br />episodes flagged</span>
+      </div>
+    </div>
+  );
+}
+
 // ── Democracy Bench (GovHack winner) — closeness-to-the-public leaderboard ──
 function DemocracyWidget() {
   const rows = [
@@ -335,7 +370,7 @@ function Marquee({ p, flip }) {
         </div>
       </div>
       <div className="marquee-vis">
-        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : p.widget === 'democracy' ? <DemocracyWidget /> : p.widget === 'figure' ? <FeaturedFigure /> : <ThresholdMonitor />}
+        {p.widget === 'demand' ? <DemandWidget /> : p.widget === 'maps' ? <MapsCycler /> : p.widget === 'democracy' ? <DemocracyWidget /> : p.widget === 'figure' ? <FeaturedFigure /> : p.widget === 'judges' ? <JudgesWidget /> : <ThresholdMonitor />}
       </div>
     </div>
   );
